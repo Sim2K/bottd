@@ -1,0 +1,113 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 250 67% 22%;
+  --foreground: 0 0% 100%;
+  --card: 250 67% 15%;
+  --card-foreground: 0 0% 100%;
+  --button-primary: 144 70% 48%;
+  --button-secondary: 250 67% 32%;
+  --accent: 37 54% 84%;
+  --border: 250 67% 32%;
+  --ring: 250 67% 32%;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+.bottle {
+  position: relative;
+  width: 48px;
+  height: 72px;
+  transition: transform 0.2s;
+}
+
+.bottle::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 10px;
+  background: #334155;
+  border-radius: 4px 4px 0 0;
+}
+
+.bottle::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: inherit;
+  border-radius: 12px;
+  box-shadow: 
+    inset -2px -2px 6px rgba(0,0,0,0.2),
+    inset 2px 2px 6px rgba(255,255,255,0.2);
+}
+
+.hidden-bottle {
+  opacity: 0.5;
+  filter: blur(2px);
+}
+
+.game-container {
+  background: linear-gradient(180deg, var(--background) 0%, hsl(250, 67%, 12%) 100%);
+  min-height: 100vh;
+  padding: 1rem;
+}
+
+.game-card {
+  background: var(--card);
+  border-radius: 24px;
+  box-shadow: 
+    0 10px 30px rgba(0,0,0,0.3),
+    inset 0 2px 6px rgba(255,255,255,0.1);
+  padding: 1.25rem;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.stats-box {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  border-radius: 16px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+.bottle-rows {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(8px);
+  border-radius: 20px;
+  padding: 1.25rem;
+  margin: 1.25rem 0;
+}
+
+.hidden-row {
+  position: relative;
+  padding: 1rem;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.2);
+  margin-bottom: 1.25rem;
+}
+
+.hidden-row::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: inherit;
+  backdrop-filter: blur(4px);
+}
