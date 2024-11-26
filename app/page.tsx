@@ -1,7 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { DndContext, closestCenter, DragEndEvent } from "@dnd-kit/core";
+import {
+  DndContext,
+  closestCenter,
+  DragEndEvent,
+  TouchSensor,
+  MouseSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
 import {
   SortableContext,
   horizontalListSortingStrategy,
@@ -76,7 +84,7 @@ export default function Home() {
     if (correctPositions === 5) {
       setGameWon(true);
       toast({
-        title: "Perfect Match! 🎉",
+        title: "Perfect Match! ",
         description: "You've arranged all bottles correctly!",
       });
       saveGameResult(true);
@@ -103,6 +111,11 @@ export default function Home() {
       JSON.stringify([result, ...history].slice(0, 10))
     );
   };
+
+  // Add sensors for both mouse and touch
+  const mouseSensor = useSensor(MouseSensor);
+  const touchSensor = useSensor(TouchSensor);
+  const sensors = useSensors(mouseSensor, touchSensor);
 
   return (
     <div className="game-container">
@@ -138,6 +151,7 @@ export default function Home() {
           </div>
 
           <DndContext
+            sensors={sensors}
             collisionDetection={closestCenter}
             onDragEnd={handleDragEnd}
           >
