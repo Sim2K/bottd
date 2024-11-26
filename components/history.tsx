@@ -3,6 +3,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { format } from "date-fns";
 import { Trophy, Clock } from "lucide-react";
+import { useState, useEffect } from "react";
 
 interface HistoryProps {
   open: boolean;
@@ -10,7 +11,14 @@ interface HistoryProps {
 }
 
 export function History({ open, onClose }: HistoryProps) {
-  const history = JSON.parse(localStorage.getItem("gameHistory") || "[]");
+  const [history, setHistory] = useState<any[]>([]);
+
+  useEffect(() => {
+    const savedHistory = localStorage.getItem("gameHistory");
+    if (savedHistory) {
+      setHistory(JSON.parse(savedHistory));
+    }
+  }, []);
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
