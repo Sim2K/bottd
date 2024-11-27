@@ -1,15 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import {
-  DndContext,
-  closestCenter,
-  DragEndEvent,
-  TouchSensor,
-  MouseSensor,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core";
+import { DndContext, closestCenter, DragEndEvent } from "@dnd-kit/core";
 import {
   SortableContext,
   horizontalListSortingStrategy,
@@ -40,7 +32,6 @@ export default function Home() {
   const [showWelcome, setShowWelcome] = useState(true); // Add showWelcome state
   const { toast } = useToast();
 
-  // Initialize game state
   useEffect(() => {
     if (!showWelcome) {
       startNewGame();
@@ -69,13 +60,10 @@ export default function Home() {
     }
 
     const timer = setInterval(() => {
-      if (!gameWon) {
-        setTimeLeft((prev) => prev - 1);
-      }
+      setTimeLeft((prev) => prev - 1);
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [timeLeft, gameWon]);
   }, [timeLeft, gameWon]);
 
   const startNewGame = () => {
@@ -101,7 +89,6 @@ export default function Home() {
       setBottles((items) => {
         const oldIndex = items.indexOf(active.id as string);
         const newIndex = items.indexOf(over.id as string);
-        setMoveCount((prev) => prev + 1);
         return arrayMove(items, oldIndex, newIndex);
       });
       setMoveCount((prev) => prev + 1);
@@ -219,42 +206,21 @@ export default function Home() {
             </div>
           </div>
 
-          {isInitialized && (
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              onDragEnd={handleDragEnd}
+          <DndContext
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext
+              items={bottles}
+              strategy={horizontalListSortingStrategy}
             >
-              <SortableContext
-                items={bottles}
-                strategy={horizontalListSortingStrategy}
-              >
-                <div className="flex justify-center gap-3">
-                  {bottles.map((color) => (
-                    <Bottle key={color} id={color} color={color} />
-                  ))}
-                </div>
-              </SortableContext>
-            </DndContext>
-          )}
-        </div>
-
-        <div className="mt-8 mb-4">
-          <div className="w-full bg-[#352C6E] rounded-xl p-4">
-            <div className="flex items-center justify-between text-sm mb-2">
-              <div className="flex items-center text-white/70">
-                <Clock className="w-4 h-4 mr-2" />
-                <span>Time Left</span>
+              <div className="flex justify-center gap-3">
+                {bottles.map((color) => (
+                  <Bottle key={color} id={color} color={color} />
+                ))}
               </div>
-              <span className="font-mono font-bold text-white">{timeLeft}s</span>
-            </div>
-            <div className="w-full bg-white/10 rounded-full h-2">
-              <div
-                className="bg-gradient-to-r from-[#6B48FF] to-[#00C2A8] h-full rounded-full transition-all duration-200"
-                style={{ width: `${(timeLeft / 20) * 100}%` }}
-              />
-            </div>
-          </div>
+            </SortableContext>
+          </DndContext>
         </div>
 
         <div className="mt-8 space-y-4">
