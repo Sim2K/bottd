@@ -10,10 +10,12 @@ import {
 import { Bottle } from "@/components/bottle";
 import { Button } from "@/components/ui/button";
 import { History } from "@/components/history";
-import { WelcomeDialog } from "@/components/welcome-dialog"; // Import WelcomeDialog component
+import { WelcomeDialog } from "@/components/welcome-dialog";
 import { useToast } from "@/components/ui/use-toast";
 import { Clock, RotateCcw, History as HistoryIcon, Target } from "lucide-react";
-import Image from "next/image"; // Import Image component from next/image
+import Image from "next/image";
+
+export const dynamic = 'force-dynamic';
 
 const COLORS = ["#FF4365", "#00C2A8", "#89FC00", "#FFB800", "#6B48FF"];
 
@@ -29,7 +31,7 @@ export default function Home() {
   const [showSolution, setShowSolution] = useState(false);
   const [gameTime, setGameTime] = useState(0);
   const [isGameRunning, setIsGameRunning] = useState(false);
-  const [showWelcome, setShowWelcome] = useState(true); // Add showWelcome state
+  const [showWelcome, setShowWelcome] = useState(true);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -132,6 +134,8 @@ export default function Home() {
   };
 
   const saveGameResult = (won: boolean) => {
+    if (typeof window === 'undefined') return; // Skip if not in browser
+
     const result = {
       date: new Date().toISOString(),
       won,

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "./ui/dialog";
 import { format } from "date-fns";
 import { Trophy, Clock } from "lucide-react";
@@ -9,8 +10,20 @@ interface HistoryProps {
   onClose: () => void;
 }
 
+interface GameResult {
+  date: string;
+  won: boolean;
+  timeElapsed: number;
+}
+
 export function History({ open, onClose }: HistoryProps) {
-  const history = JSON.parse(localStorage.getItem("gameHistory") || "[]");
+  const [history, setHistory] = useState<GameResult[]>([]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const savedHistory = JSON.parse(localStorage.getItem("gameHistory") || "[]");
+    setHistory(savedHistory);
+  }, [open]);
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -21,7 +34,7 @@ export function History({ open, onClose }: HistoryProps) {
           </DialogTitle>
         </DialogHeader>
         <div className="space-y-3">
-          {history.map((game: any, index: number) => (
+          {history.map((game: GameResult, index: number) => (
             <div
               key={index}
               className="p-4 rounded-2xl bg-white/10 backdrop-blur-sm"
