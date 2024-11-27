@@ -70,8 +70,8 @@ export default function Home() {
   }, [isGameRunning]);
 
   useEffect(() => {
-    if (gameWon) {
-      return; // Don't start the timer if game is won
+    if (!isGameRunning || gameWon) {
+      return; // Don't start the timer if game is not running or is won
     }
 
     if (timeLeft <= 0) {
@@ -85,7 +85,7 @@ export default function Home() {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [timeLeft]);
+  }, [timeLeft, isGameRunning, gameWon]);
 
   const startNewGame = () => {
     const shuffledColors = [...COLORS].sort(() => Math.random() - 0.5);
@@ -196,7 +196,7 @@ export default function Home() {
           <div className="bg-[#352C6E]/50 backdrop-blur-sm rounded-2xl p-4 transition-all duration-300 hover:bg-[#352C6E]/70">
             <div className="flex flex-col items-center">
               <div className="text-white/50 text-sm">Move Timer</div>
-              <div className="text-2xl font-bold text-white">{timeLeft}s</div>
+              <div className="text-2xl font-bold text-white">{isGameRunning && !gameWon ? timeLeft : "--"}s</div>
             </div>
           </div>
           <div className="bg-[#352C6E]/50 backdrop-blur-sm rounded-2xl p-4 transition-all duration-300 hover:bg-[#352C6E]/70">
