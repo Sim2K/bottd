@@ -34,7 +34,6 @@ const ALL_CANS = [
   "can-5.png",
   "can-6.png",
   "can-7.png",
-  "can-8.png",
 ];
 
 export default function Home() {
@@ -235,7 +234,7 @@ export default function Home() {
 
         <div className="bottle-rows space-y-8 min-h-[250px] flex flex-col justify-center">
           <div className="hidden-row">
-            <div className="flex justify-center gap-6 min-h-[120px]">
+            <div className="flex justify-center gap-2 min-h-[120px]">
               {hiddenRow.map((can, index) => (
                 <div
                   key={`hidden-${index}`}
@@ -277,7 +276,7 @@ export default function Home() {
               items={bottles}
               strategy={horizontalListSortingStrategy}
             >
-              <div className="flex justify-center gap-6 min-h-[120px]">
+              <div className="flex justify-center gap-2 min-h-[120px]">
                 {bottles.map((can) => (
                   <Bottle key={can} id={can} color={can} />
                 ))}
