@@ -22,9 +22,9 @@ export function WelcomeDialog({ open, onClose }: WelcomeDialogProps) {
           <DialogTitle className="sr-only">Welcome to Bottld</DialogTitle>
         </DialogHeader>
         <div className="flex flex-col items-center justify-center space-y-12">
-          <div className="relative w-[512px] h-64">
+          <div className="relative w-[665px] h-[332px]">
             <Image
-              src="/images/BOTLD.png"
+              src="/images/botlld_logo.png"
               alt="Bottld Logo"
               fill
               className="object-contain"

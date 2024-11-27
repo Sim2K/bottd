@@ -199,7 +199,7 @@ export default function Home() {
       <div className="max-w-lg mx-auto pt-8">
         <div className="relative w-72 h-36 mx-auto mb-8">
           <Image
-            src="/images/BOTLD.png"
+            src="/images/botlld_logo.png"
             alt="Bottld Logo"
             fill
             className="object-contain"
@@ -232,7 +232,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="bottle-rows space-y-8 min-h-[250px] flex flex-col justify-center">
+        <div className="bottle-rows space-y-3 min-h-[250px] flex flex-col justify-center">
           <div className={`hidden-row ${(showSolution || gameWon) ? 'game-over' : ''}`}>
             <div className="flex justify-center gap-2 min-h-[120px]">
               {hiddenRow.map((can, index) => (
@@ -283,6 +283,21 @@ export default function Home() {
               </div>
             </SortableContext>
           </DndContext>
+        </div>
+
+        <div className="flex justify-center gap-6 mt-4 w-full max-w-md mx-auto">
+          <div className="flex-1 bg-[#352C6E]/50 backdrop-blur-sm rounded-xl px-4 py-2 transition-all duration-300 hover:bg-[#352C6E]/70">
+            <div className="flex items-center justify-center gap-2">
+              <span className="text-white/50 text-sm">Moves:</span>
+              <span className="text-lg font-bold text-white">{moveCount}</span>
+            </div>
+          </div>
+          <div className="flex-1 bg-[#352C6E]/50 backdrop-blur-sm rounded-xl px-4 py-2 transition-all duration-300 hover:bg-[#352C6E]/70">
+            <div className="flex items-center justify-center gap-2">
+              <span className="text-white/50 text-sm">Guesses:</span>
+              <span className="text-lg font-bold text-white">{guessCount}</span>
+            </div>
+          </div>
         </div>
 
         <div className="mt-8 space-y-4">
