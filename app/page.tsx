@@ -26,7 +26,16 @@ import Image from "next/image";
 
 export const dynamic = 'force-dynamic';
 
-const COLORS = ["#FF4365", "#00C2A8", "#89FC00", "#FFB800", "#6B48FF"];
+const ALL_CANS = [
+  "can-1.png",
+  "can-2.png",
+  "can-3.png",
+  "can-4.png",
+  "can-5.png",
+  "can-6.png",
+  "can-7.png",
+  "can-8.png",
+];
 
 export default function Home() {
   const [bottles, setBottles] = useState<string[]>([]);
@@ -88,10 +97,17 @@ export default function Home() {
   }, [timeLeft, isGameRunning, gameWon]);
 
   const startNewGame = () => {
-    const shuffledColors = [...COLORS].sort(() => Math.random() - 0.5);
-    const initialBottles = [...COLORS].sort(() => Math.random() - 0.5);
-    setHiddenRow(shuffledColors.slice(0, 5));
-    setBottles(initialBottles.slice(0, 5));
+    // Randomly select 5 cans from the available 8
+    const selectedCans = [...ALL_CANS]
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 5);
+
+    // Create two random arrangements of the selected cans
+    const shuffledHidden = [...selectedCans].sort(() => Math.random() - 0.5);
+    const shuffledBottles = [...selectedCans].sort(() => Math.random() - 0.5);
+
+    setHiddenRow(shuffledHidden);
+    setBottles(shuffledBottles);
     setGameWon(false);
     setShowSolution(false);
     setTimeLeft(20);
@@ -217,19 +233,37 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="bottle-rows space-y-8">
+        <div className="bottle-rows space-y-8 min-h-[250px] flex flex-col justify-center">
           <div className="hidden-row">
-            <div className="flex justify-center gap-3">
-              {hiddenRow.map((color, index) => (
+            <div className="flex justify-center gap-6 min-h-[120px]">
+              {hiddenRow.map((can, index) => (
                 <div
                   key={`hidden-${index}`}
                   className="bottle hidden-bottle transition-all duration-500"
-                  style={{
-                    backgroundColor: showSolution || gameWon ? color : "#666",
-                    transform: showSolution || gameWon ? "scale(1.05)" : "scale(1)",
-                    boxShadow: showSolution || gameWon ? `0 0 20px ${color}40` : "none",
-                  }}
-                />
+                >
+                  {(showSolution || gameWon) ? (
+                    <div className="h-[120px] w-[60px] relative">
+                      <Image
+                        src={`/images/cans/${can}`}
+                        alt="Can"
+                        fill
+                        className="object-contain"
+                        sizes="60px"
+                        style={{
+                          transform: "scale(1.05)",
+                          filter: "drop-shadow(0 0 10px rgba(255, 255, 255, 0.3))"
+                        }}
+                      />
+                    </div>
+                  ) : (
+                    <div 
+                      className="w-[60px] h-[120px] bg-gray-600 rounded-lg"
+                      style={{
+                        transform: "scale(1)"
+                      }}
+                    />
+                  )}
+                </div>
               ))}
             </div>
           </div>
@@ -243,9 +277,9 @@ export default function Home() {
               items={bottles}
               strategy={horizontalListSortingStrategy}
             >
-              <div className="flex justify-center gap-3">
-                {bottles.map((color) => (
-                  <Bottle key={color} id={color} color={color} />
+              <div className="flex justify-center gap-6 min-h-[120px]">
+                {bottles.map((can) => (
+                  <Bottle key={can} id={can} color={can} />
                 ))}
               </div>
             </SortableContext>
