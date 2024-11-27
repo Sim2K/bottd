@@ -233,12 +233,12 @@ export default function Home() {
         </div>
 
         <div className="bottle-rows space-y-8 min-h-[250px] flex flex-col justify-center">
-          <div className="hidden-row">
+          <div className={`hidden-row ${(showSolution || gameWon) ? 'game-over' : ''}`}>
             <div className="flex justify-center gap-2 min-h-[120px]">
               {hiddenRow.map((can, index) => (
                 <div
                   key={`hidden-${index}`}
-                  className="bottle hidden-bottle transition-all duration-500"
+                  className={`bottle ${!(showSolution || gameWon) ? 'hidden-bottle' : ''} transition-all duration-500`}
                 >
                   {(showSolution || gameWon) ? (
                     <div className="h-[120px] w-[60px] relative">

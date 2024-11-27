@@ -25,7 +25,7 @@
 
 .bottle {
   position: relative;
-  transition: transform 0.2s;
+  transition: all 0.3s ease;
   transform-origin: center;
   flex-shrink: 0;
   max-width: 60px;
@@ -40,6 +40,7 @@
 .hidden-bottle {
   opacity: 0.5;
   filter: blur(2px);
+  transition: all 0.3s ease;
 }
 
 .game-container {
@@ -101,4 +102,10 @@
   background: rgba(0, 0, 0, 0.4);
   border-radius: inherit;
   backdrop-filter: blur(4px);
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+.hidden-row.game-over::before {
+  opacity: 0;
 }
