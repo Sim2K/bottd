@@ -64,7 +64,7 @@ export default function Home() {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [timeLeft, gameWon]);
+  }, [timeLeft]);
 
   const startNewGame = () => {
     const shuffledColors = [...COLORS].sort(() => Math.random() - 0.5);
