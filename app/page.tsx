@@ -1,7 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { DndContext, closestCenter, DragEndEvent } from "@dnd-kit/core";
+import {
+  DndContext,
+  closestCenter,
+  DragEndEvent,
+  useSensor,
+  useSensors,
+  MouseSensor,
+  TouchSensor,
+} from "@dnd-kit/core";
 import {
   SortableContext,
   horizontalListSortingStrategy,
@@ -10,8 +18,9 @@ import {
 import { Bottle } from "@/components/bottle";
 import { Button } from "@/components/ui/button";
 import { History } from "@/components/history";
-import { WelcomeDialog } from "@/components/welcome-dialog";
+import { AppMenu } from "@/components/menu";
 import { useToast } from "@/components/ui/use-toast";
+import { WelcomeDialog } from "@/components/welcome-dialog";
 import { Clock, RotateCcw, History as HistoryIcon, Target } from "lucide-react";
 import Image from "next/image";
 
@@ -33,6 +42,16 @@ export default function Home() {
   const [isGameRunning, setIsGameRunning] = useState(false);
   const [showWelcome, setShowWelcome] = useState(true);
   const { toast } = useToast();
+
+  const sensors = useSensors(
+    useSensor(MouseSensor),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 250,
+        tolerance: 5,
+      },
+    })
+  );
 
   useEffect(() => {
     if (!showWelcome) {
@@ -104,6 +123,7 @@ export default function Home() {
     toast({
       title: "Game Over",
       description: "The solution has been revealed. Click Reset to play again!",
+      className: "bg-[#352C6E] border-[#FF4365]/20",
     });
   };
 
@@ -119,14 +139,16 @@ export default function Home() {
       setGameWon(true);
       setIsGameRunning(false);
       toast({
-        title: "Perfect Match! ",
+        title: "Perfect Match!",
         description: `You solved it with ${timeLeft}s left!`,
+        className: "bg-[#352C6E] border-[#89FC00]/20",
       });
       saveGameResult(true);
     } else if (showToast) {
       toast({
         title: "Keep Going!",
         description: `${correctPositions}/5 bottles matched correctly.`,
+        className: "bg-[#352C6E] border-white/10",
       });
       saveGameResult(false);
     }
@@ -157,8 +179,9 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#1a1625] to-[#2A2356] p-4 md:p-8">
-      <div className="max-w-md mx-auto bg-[#2A2356]/50 backdrop-blur-lg rounded-3xl p-6 md:p-8 shadow-2xl border border-white/10">
+    <main className="min-h-screen bg-background text-white p-4">
+      <AppMenu onHistoryClick={() => setShowHistory(true)} />
+      <div className="max-w-lg mx-auto pt-8">
         <div className="relative w-72 h-36 mx-auto mb-8">
           <Image
             src="/images/BOTLD.png"
@@ -171,15 +194,16 @@ export default function Home() {
 
         <div className="grid grid-cols-2 gap-4 mb-4">
           <div className="bg-[#352C6E]/50 backdrop-blur-sm rounded-2xl p-4 transition-all duration-300 hover:bg-[#352C6E]/70">
-            <div className="flex items-center gap-2">
-              <Clock className="w-6 h-6 text-[#00C2A8]" />
-              <span className="text-white/70 text-lg">Move timer: {timeLeft}s</span>
+            <div className="flex flex-col items-center">
+              <div className="text-white/50 text-sm">Move Timer</div>
+              <div className="text-2xl font-bold text-white">{timeLeft}s</div>
             </div>
           </div>
           <div className="bg-[#352C6E]/50 backdrop-blur-sm rounded-2xl p-4 transition-all duration-300 hover:bg-[#352C6E]/70">
-            <div className="flex items-center gap-2">
-              <Target className="w-6 h-6 text-[#FF4365]" />
-              <span className="text-white/70 text-lg">Matched: {matchedCount}/5</span>
+            <div className="flex items-center justify-center h-full">
+              <div className="text-3xl font-bold text-white">
+                {matchedCount}/5
+              </div>
             </div>
           </div>
         </div>
@@ -211,6 +235,7 @@ export default function Home() {
           </div>
 
           <DndContext
+            sensors={sensors}
             collisionDetection={closestCenter}
             onDragEnd={handleDragEnd}
           >
@@ -230,45 +255,28 @@ export default function Home() {
         <div className="mt-8 space-y-4">
           <div className="flex gap-3">
             <Button
-              onClick={showSolution ? startNewGame : handleQuit}
+              onClick={showSolution || gameWon ? startNewGame : handleQuit}
               className="flex-1 bg-[#FF4365] hover:bg-[#FF4365]/90 text-white font-semibold py-6 rounded-2xl transition-all duration-300 hover:scale-105"
             >
               <RotateCcw className="w-5 h-5 mr-2" />
-              {showSolution ? "Reset" : "Quit"}
+              {showSolution || gameWon ? "Reset" : "Quit"}
             </Button>
             <Button
               onClick={() => checkGuess()}
               disabled={gameWon}
               className="flex-1 bg-gradient-to-r from-[#89FC00] to-[#00C2A8] hover:opacity-90 text-background font-semibold py-6 rounded-2xl transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:hover:opacity-50 disabled:cursor-not-allowed"
             >
-              Submit Guess
+              Submit
             </Button>
           </div>
-
-          <div className="text-center text-white/70 font-medium space-x-6">
-            <span className="inline-flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#FF4365]"></span>
-              Moves: {moveCount}
-            </span>
-            <span className="inline-flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#00C2A8]"></span>
-              Guesses: {guessCount}
-            </span>
-          </div>
-
-          <Button
-            onClick={() => setShowHistory(true)}
-            variant="outline"
-            className="w-full border-2 border-white/10 text-white/70 hover:bg-white/5 font-medium py-4 rounded-2xl transition-all duration-300"
-          >
-            <HistoryIcon className="w-4 h-4 mr-2" />
-            View History
-          </Button>
         </div>
       </div>
 
       <History open={showHistory} onClose={() => setShowHistory(false)} />
-      <WelcomeDialog open={showWelcome} onClose={() => setShowWelcome(false)} />
-    </div>
+      <WelcomeDialog
+        open={showWelcome}
+        onClose={() => setShowWelcome(false)}
+      />
+    </main>
   );
 }
